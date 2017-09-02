@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nintaco;
 
 namespace BombermanBot
 {
@@ -13,19 +14,19 @@ namespace BombermanBot
 
         public void launch()
         {
-            api.addFrameListener(renderFinished);
-            api.addStatusListener(statusChanged);
-            api.addActivateListener(apiEnabled);
-            api.addDeactivateListener(apiDisabled);
-            api.addStopListener(dispose);
-            api.run();
+            api.AddFrameListener(renderFinished);
+            api.AddStatusListener(statusChanged);
+            api.AddActivateListener(apiEnabled);
+            api.AddDeactivateListener(apiDisabled);
+            api.AddStopListener(dispose);
+            api.Run();
         }
 
         private void apiEnabled()
         {
             Console.WriteLine("API enabled");
             //api.reset(); // Uncomment this to reset the console
-            stateStartFrame = api.getFrameCount();
+            stateStartFrame = api.GetFrameCount();
         }
 
         private void apiDisabled()
@@ -55,13 +56,13 @@ namespace BombermanBot
 
         private void renderFinished()
         {
-            int currentFrame = api.getFrameCount();
+            int currentFrame = api.GetFrameCount();
 
 
             switch (state)
             {
                 case 0:
-                    ApiSource.API.writeGamepad(0, GamepadButtons.Right, true);
+                    ApiSource.API.WriteGamepad(0, GamepadButtons.Right, true);
                     if (currentFrame - stateStartFrame > spaceTraversalTime * 4)
                     {
                         state = 1;
@@ -69,12 +70,12 @@ namespace BombermanBot
                     }
                     break;
                 case 1:
-                    ApiSource.API.writeGamepad(0, GamepadButtons.A, true);
+                    ApiSource.API.WriteGamepad(0, GamepadButtons.A, true);
                     state = 2;
                     stateStartFrame = currentFrame;
                     break;
                 case 2:
-                    ApiSource.API.writeGamepad(0, GamepadButtons.Left, true);
+                    ApiSource.API.WriteGamepad(0, GamepadButtons.Left, true);
                     if (currentFrame - stateStartFrame > spaceTraversalTime * 3)
                     {
                         state = 3;
@@ -91,7 +92,21 @@ namespace BombermanBot
             }
 
 
-            Console.WriteLine(api.getFrameCount());
+            //for(int i = 8386; i < 9436; i+= 2)
+            //{
+            //    var block = api.readPPU(i);
+            //    if (block == 95) Console.Write("O");
+            //    else if (block == 104) Console.Write("X");
+            //    else Console.Write("-");
+            //}
+
+
+            // 15F is green
+            // 168 is brick
+            // 166 is block
+            //Console.WriteLine(api.readPPU(8386));
+            //Console.WriteLine(api.readPPU(8394));
+            //Console.WriteLine(api.getFrameCount());
 
         }
         static void Main(string[] args)
