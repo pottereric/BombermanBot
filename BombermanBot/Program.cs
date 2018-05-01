@@ -45,10 +45,10 @@ namespace BombermanBot
         }
 
         int state = 0;
-        // 0 - go right
-        // 1 - drop bomb
-        // 2 - go left
-        // 3 - wait
+        private const int MoveRight = 0;
+        private const int DropABomb = 1;
+        private const int MoveLeft = 2;
+        private const int Wait = 3;
 
         private int stateStartFrame = 0;
 
@@ -61,31 +61,31 @@ namespace BombermanBot
 
             switch (state)
             {
-                case 0:
+                case MoveRight:
                     ApiSource.API.WriteGamepad(0, GamepadButtons.Right, true);
                     if (currentFrame - stateStartFrame > spaceTraversalTime * 4)
                     {
-                        state = 1;
+                        state = DropABomb;
                         stateStartFrame = currentFrame;
                     }
                     break;
-                case 1:
+                case DropABomb:
                     ApiSource.API.WriteGamepad(0, GamepadButtons.A, true);
-                    state = 2;
+                    state = MoveLeft;
                     stateStartFrame = currentFrame;
                     break;
-                case 2:
+                case MoveLeft:
                     ApiSource.API.WriteGamepad(0, GamepadButtons.Left, true);
                     if (currentFrame - stateStartFrame > spaceTraversalTime * 3)
                     {
-                        state = 3;
+                        state = Wait;
                         stateStartFrame = currentFrame;
                     }
                     break;
-                case 3:
+                case Wait:
                     if (currentFrame - stateStartFrame > spaceTraversalTime * 6)
                     {
-                        state = 0;
+                        state = MoveRight;
                         stateStartFrame = currentFrame;
                     }
                     break;
@@ -109,6 +109,7 @@ namespace BombermanBot
             //Console.WriteLine(api.getFrameCount());
 
         }
+
         static void Main(string[] args)
         {
             ApiSource.initRemoteAPI("localhost", 9999);
